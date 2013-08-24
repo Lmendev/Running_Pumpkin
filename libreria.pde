@@ -110,8 +110,15 @@ void pintarBotonRegresar2() {
 }
 
 void controlAnimacionMouse(){
-if (mousePressed)
+if (mousePressed){
+ /* if(mousePossition.dist(usuario2.getLocation())<=usuario2.getDimension().y/2){
+    image(cursor1, 0,0);
+    println("entra");
+  }
+  else{*/
     image(cursor2, mouseX-cursor2.width/2,mouseY-cursor2.height/2);
+  //}
+}
   else
     image(cursor1, mouseX-cursor1.width/2,mouseY-cursor1.height/2);
 
@@ -153,10 +160,13 @@ tint(255);
                   mouseDistance.x=usuario2.getLocation().x-mouseX;
                   mouseDistance.y=usuario2.getLocation().y-mouseY;
                   
+                  
                 }
               }else{
                 if(!sw2 && mousePressed){
                   usuario2.setLocation(parseInt(mouseX+mouseDistance.x),parseInt(mouseY+mouseDistance.y));
+               
+                  
                 }
                 
               }

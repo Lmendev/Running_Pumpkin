@@ -38,7 +38,7 @@ boolean sw2=false;
 
 public void setup () {
   size(960, 600, P3D);   // Tamaño ventana 960x 600
-  noCursor();            // Ocultar cursor
+              // Ocultar cursor
   
   loadSounds();      // Cargar sonido
   loadCharacter();   // Cargar personaje
