@@ -27,11 +27,13 @@ PImage A1,A2,A3,A4,A5,A6;
 PImage imagen;
 String[] lines, posiciones;
 PVector[] posBaldosas;
+PVector mousePossition = new PVector(mouseX,mouseY);
+PVector mouseDistance = new PVector(0,0);
 int k, u, cantB,cantM;
 int [][] mundo;
 Monster[] monsters;
 boolean sw=false;
-int ani =0;
+int ani = 0;
 boolean sw2=false;
 
 public void setup () {

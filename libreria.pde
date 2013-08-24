@@ -146,15 +146,17 @@ tint(255);
           if(mousePressed){
             if(usuario2.alive) {
               if(!sw){
-                PVector mousePossition = new PVector(mouseX,mouseY);
-                if(mousePossition.dist(usuario2.getLocation())<=usuario2.getDimension().y){
+                mousePossition.x=mouseX;
+                mousePossition.y=mouseY;
+                if(mousePossition.dist(usuario2.getLocation())<=usuario2.getDimension().y/2){
                   sw=true;
-                  mouseX=parseInt(usuario2.getLocation().x);
-                  mouseY=parseInt(usuario2.getLocation().y);
+                  mouseDistance.x=usuario2.getLocation().x-mouseX;
+                  mouseDistance.y=usuario2.getLocation().y-mouseY;
+                  
                 }
               }else{
                 if(!sw2 && mousePressed){
-                  usuario2.setLocation(mouseX,mouseY);
+                  usuario2.setLocation(parseInt(mouseX+mouseDistance.x),parseInt(mouseY+mouseDistance.y));
                 }
                 
               }
