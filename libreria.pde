@@ -31,19 +31,14 @@ void loadTiles(){
 }
 
 void loadAnimations(){
-  A1 = loadImage("animations/A1.png");
-  A2 = loadImage("animations/A2.png");
-  A3 = loadImage("animations/A3.png");
-  A4 = loadImage("animations/A4.png");
-  A5 =  loadImage("animations/A5.png");
-  A6 = loadImage("animations/A6.png");
+  animacion = loadImage("animations/animacion.png");
   
 }
 
 void loadCursor(){
   //--Cargar imagenes de cursor--//
-  cursor1 = loadImage("cursor/cursor.png");
-  cursor2 = loadImage("cursor/cursorpress.png");
+  
+  spritecursor = loadImage("cursor/cursorsprite.png");
 }
 
 void loadBackgrounds(){
@@ -111,16 +106,12 @@ void pintarBotonRegresar2() {
 
 void controlAnimacionMouse(){
 if (mousePressed){
- /* if(mousePossition.dist(usuario2.getLocation())<=usuario2.getDimension().y/2){
-    image(cursor1, 0,0);
-    println("entra");
-  }
-  else{*/
-    image(cursor2, mouseX-cursor2.width/2,mouseY-cursor2.height/2);
-  //}
+  
+  image(spritecursor.get(28,0,28,31), mouseX-spritecursor.width/4,mouseY-spritecursor.height/2);
+ 
 }
   else
-    image(cursor1, mouseX-cursor1.width/2,mouseY-cursor1.height/2);
+    image(spritecursor.get(0,0,28,31), mouseX-spritecursor.width/4,mouseY-spritecursor.height/2);
 
 }
 
@@ -200,44 +191,29 @@ tint(255);
         }
       }else{
         sw2=false;
-        if(ani<5)
-          image(A1, usuario2.locationX()-95, usuario2.locationY()-100);
-        else if (ani<10)
-            image(A2, usuario2.locationX()-95, usuario2.locationY()-100);
-        else if (ani<15)
-            image(A3, usuario2.locationX()-95, usuario2.locationY()-100);
-        else if (ani<20)
-            image(A4, usuario2.locationX()-95, usuario2.locationY()-100);
-        else if (ani<25)
-            image(A5, usuario2.locationX()-95, usuario2.locationY()-100);
-        else if (ani<30){
-            image(A6, usuario2.locationX()-95, usuario2.locationY()-100);
-            ani =-1;
-            usuario2.setLocation(usuario2.getxInicial(),usuario2.getyInicial());
-            usuario2.alive = true;
-            sw2=true;
-         }
-         ani++;
+        animacion();
+         
       }
 }
 
 
 public void animacion (){
   if(ani<5)
-    image(A1, usuario2.locationX()-95, usuario2.locationY()-100);
+   image(animacion.get(0,0,164,174), usuario2.locationX()-95, usuario2.locationY()-100);
   else if (ani<10)
-      image(A2, usuario2.locationX()-95, usuario2.locationY()-100);
+      image(animacion.get(168,0,164,174), usuario2.locationX()-95, usuario2.locationY()-100);
     else if (ani<15)
-        image(A3, usuario2.locationX()-95, usuario2.locationY()-100);
+        image(animacion.get(336,0,164,174), usuario2.locationX()-95, usuario2.locationY()-100);
       else if (ani<20)
-            image(A4, usuario2.locationX()-95, usuario2.locationY()-100);
+            image(animacion.get(504,0,164,174), usuario2.locationX()-95, usuario2.locationY()-100);
           else if (ani<25)
-              image(A5, usuario2.locationX()-95, usuario2.locationY()-100);
+               image(animacion.get(672,0,162,174), usuario2.locationX()-95, usuario2.locationY()-100);
             else if (ani<30){
-                image(A6, usuario2.locationX()-95, usuario2.locationY()-100);
+                image(animacion.get(840,0,168,174), usuario2.locationX()-95, usuario2.locationY()-100);
                 ani =-1;
                 usuario2.setLocation(usuario2.getxInicial(),usuario2.getyInicial());
                 usuario2.alive = true;
+                sw2=true;
               }
   ani++;
   
