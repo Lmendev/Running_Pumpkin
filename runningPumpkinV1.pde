@@ -7,7 +7,6 @@ Adriana Gallon                  @apgallon
 import ddf.minim.*;  //Libreria de audio
 
 //--Declaración de variables--//
-  
 Minim minim;
 AudioPlayer groove;
 PImage fondoInicio; 
@@ -21,8 +20,8 @@ AudioPlayer groove2;
 Body usuario2;
 PImage fondoMundo;
 PImage baldosa; 
-PImage calabaza;
-PImage bruja, momia, lobo, calabera;
+PImage calabazaImage;
+PImage brujaImage, momiaImage, loboImage, calaberaImage;
 PImage animacion;
 PImage imagen;
 String[] lines, posiciones;
@@ -30,7 +29,7 @@ PVector[] posBaldosas;
 PVector mousePossition = new PVector(mouseX,mouseY);
 PVector mouseDistance = new PVector(0,0);
 int k, u, cantB,cantM;
-int [][] mundo;
+int [][] mundo= new int[8][13];
 Monster[] monsters;
 boolean sw=false;
 int ani = 0;
@@ -38,7 +37,7 @@ boolean sw2=false;
 
 public void setup () {
   size(960, 600, P3D);   // Tamaño ventana 960x 600
-              // Ocultar cursor
+  //noCursor();            // Ocultar cursor
   
   loadSounds();      // Cargar sonido
   loadCharacter();   // Cargar personaje

@@ -1,4 +1,74 @@
-void pintarBotonJugar () {
+//--Librería Running Pumpkin--//
+/*Fecha de creación: 24/'8/2013 */
+
+
+//--Cargar imagenes--//
+
+public void loadCharacter() {
+  //--Cargar imagen calabaza--//
+  calabazaImage = loadImage("character/calabaza.png");  // Cargar imagen calabaza
+}
+
+public void loadMonsters(){
+  //--Cargar imagenes monstruos--//
+  brujaImage = loadImage("monsters/bruja.png");  // Cargar imagen bruja
+  momiaImage = loadImage("monsters/momia.png");  // Cargar imagen momia
+  loboImage = loadImage("monsters/lobo.png");    // Cargar imagen lobo
+  calaberaImage = loadImage("monsters/calabera.png");  // Cargar imagen calabera
+}
+
+public void loadTiles(){
+  //--Cargar imagenes baldosas--//
+  baldosa = loadImage("tiles/tile.jpg");  // Cargar imagen baldosa
+}
+
+public void loadAnimations(){
+  //--Cargar imagenes animaciones--//
+  animacion = loadImage("animations/animacion.png");  // Cargar imagen animación muerte 
+}
+
+public void loadCursor(){
+  //--Cargar imagenes de cursor--//  
+  spritecursor = loadImage("cursor/cursorsprite.png");  // Cargar imagen cursor
+}
+
+public void loadBackgrounds(){
+  //--Cargar imagenes de fondo--//
+  fondoInicio = loadImage("backgrounds/inicio.jpg");  // Cargar fondo pantalla inicio 
+  creditos= loadImage("backgrounds/fondoCreditos.png");  // Cargar fondo pantalla creditos
+  win=loadImage("backgrounds/Win1.png");  // Cargar fondo pantalla ganador
+  fondoMundo = loadImage("backgrounds/fondoMundo.jpg");  // Cargar fondo pantalla mundo
+}
+
+public void loadSounds(){
+  //--Cargar musica--//
+  minim2 = new Minim(this);
+  minim = new Minim(this);
+  
+  groove = minim.loadFile("sounds/musicaInicio.mp3");  // Cargar musica de fondo
+  groove2 = minim2.loadFile("sounds/scream3.mp3");  // Cargar sonido scream;  
+}
+
+public void loadButtons(){
+  //--Cargar imagenes botones--//
+  jugar1 = loadImage("buttons/jugar1.png");  // Cargar Boton jugar
+  jugar2 = loadImage("buttons/jugar2.png");  // Cargar Boton jugar2
+  creditos1 = loadImage("buttons/creditos1.png");  // Cargar Boton creditos 
+  creditos2 = loadImage("buttons/creditos2.png");  // Cargar Boton creditos2
+  back = loadImage("buttons/back.png");  // Cargar Boton regresar
+  back1 = loadImage("buttons/back1.png");  // Cargar boton regresar2
+}
+
+//--Fin cargar imagenes--//
+
+
+//--Controlador botones--//
+
+public void drawButtons(){
+  
+}
+
+public void pintarBotonJugar () {
   /* Función que pinta, maneja el control 
   de flujo y animación del boton jugar 
   en la pantalla de inicio */
@@ -9,61 +79,6 @@ void pintarBotonJugar () {
       pantalla=1;
   }else
     image(jugar1, 100, 200);
-}
-
-void loadCharacter() {
-//Calabaza
-  imagen = loadImage("character/calabaza.png");
-  mundo= new int[8][13];
-calabaza = loadImage("character/calabaza.png");
-}
-
-void loadMonsters(){
-  bruja = loadImage("monsters/bruja.png");
-  momia = loadImage("monsters/momia.png");
-  lobo = loadImage("monsters/lobo.png");
-  calabera = loadImage("monsters/calabera.png");
-  
-}
-
-void loadTiles(){
-  baldosa = loadImage("tiles/tile.jpg");
-}
-
-void loadAnimations(){
-  animacion = loadImage("animations/animacion.png");
-  
-}
-
-void loadCursor(){
-  //--Cargar imagenes de cursor--//
-  
-  spritecursor = loadImage("cursor/cursorsprite.png");
-}
-
-void loadBackgrounds(){
-  fondoInicio = loadImage("backgrounds/inicio.jpg"); // Imagen de fondo
-  creditos= loadImage("backgrounds/fondoCreditos.png");
-  win=loadImage("backgrounds/Win1.png");
-   fondoMundo = loadImage("backgrounds/fondoMundo.jpg");
-}
-
-void loadSounds(){
-  minim2 = new Minim(this);
-  minim = new Minim(this);
-  
-  groove = minim.loadFile("sounds/musicaInicio.mp3");
-  groove2 = minim2.loadFile("sounds/scream3.mp3");
-  
-}
-
-void loadButtons(){
-jugar1 = loadImage("buttons/jugar1.png");          // Boton jugar
-  jugar2 = loadImage("buttons/jugar2.png");
-  creditos1 = loadImage("buttons/creditos1.png");    // Boton creditos
-  creditos2 = loadImage("buttons/creditos2.png");
-    back = loadImage("buttons/back.png");
-  back1 = loadImage("buttons/back1.png");
 }
 
 
@@ -104,21 +119,6 @@ void pintarBotonRegresar2() {
       }
 }
 
-void controlAnimacionMouse(){
-if (mousePressed){
-  
-  image(spritecursor.get(28,0,28,31), mouseX-spritecursor.width/4,mouseY-spritecursor.height/2);
- 
-}
-  else
-    image(spritecursor.get(0,0,28,31), mouseX-spritecursor.width/4,mouseY-spritecursor.height/2);
-
-}
-
-void playMusic(){
-  groove.loop();
-}
-
 void pintarBotonRegresar3(){
 image(back,10,10);
       if(mouseX<72&&mouseX>10&&mouseY<72&&mouseY>10){
@@ -126,6 +126,21 @@ image(back,10,10);
           if(mousePressed)
             pantalla=0;
       }
+}
+
+//--Fin controlador botones--//
+
+
+
+void controlAnimacionMouse(){
+  if (mousePressed)
+    image(spritecursor.get(28,0,28,31), mouseX-spritecursor.width/4,mouseY-spritecursor.height/2);
+  else
+    image(spritecursor.get(0,0,28,31), mouseX-spritecursor.width/4,mouseY-spritecursor.height/2);
+}
+
+void playMusic(){
+  groove.loop();
 }
 
 void pintarBaldosas(){
@@ -232,7 +247,7 @@ public void loadLevel (String fondo, String matMundo) {
       if(posiciones[j].compareTo("5")==0 || posiciones[j].compareTo("3")==0|| posiciones[j].compareTo("10")==0|| posiciones[j].compareTo("6")==0|| posiciones[j].compareTo("7")==0)
         cantM++;
       if(posiciones[j].compareTo("2")==0)
-        usuario2 = new Body(j*80+39,i*75+39,imagen,0);
+        usuario2 = new Body(j*80+39,i*75+39,calabazaImage,0);
       mundo[i][j]=parseInt(posiciones[j]);
     }
   }
