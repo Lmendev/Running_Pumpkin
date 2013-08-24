@@ -11,6 +11,67 @@ void pintarBotonJugar () {
     image(jugar1, 100, 200);
 }
 
+void loadCharacter() {
+//Calabaza
+  imagen = loadImage("character/calabaza.png");
+  mundo= new int[8][13];
+calabaza = loadImage("character/calabaza.png");
+}
+
+void loadMonsters(){
+  bruja = loadImage("monsters/bruja.png");
+  momia = loadImage("monsters/momia.png");
+  lobo = loadImage("monsters/lobo.png");
+  calabera = loadImage("monsters/calabera.png");
+  
+}
+
+void loadTiles(){
+  baldosa = loadImage("tiles/tile.jpg");
+}
+
+void loadAnimations(){
+  A1 = loadImage("animations/A1.png");
+  A2 = loadImage("animations/A2.png");
+  A3 = loadImage("animations/A3.png");
+  A4 = loadImage("animations/A4.png");
+  A5 =  loadImage("animations/A5.png");
+  A6 = loadImage("animations/A6.png");
+  
+}
+
+void loadCursor(){
+  //--Cargar imagenes de cursor--//
+  cursor1 = loadImage("cursor/cursor.png");
+  cursor2 = loadImage("cursor/cursorpress.png");
+}
+
+void loadBackgrounds(){
+  fondoInicio = loadImage("backgrounds/inicio.jpg"); // Imagen de fondo
+  creditos= loadImage("backgrounds/fondoCreditos.png");
+  win=loadImage("backgrounds/Win1.png");
+   fondoMundo = loadImage("backgrounds/fondoMundo.jpg");
+}
+
+void loadSounds(){
+  minim2 = new Minim(this);
+  minim = new Minim(this);
+  
+  groove = minim.loadFile("sounds/musicaInicio.mp3");
+  groove2 = minim2.loadFile("sounds/scream3.mp3");
+  
+}
+
+void loadButtons(){
+jugar1 = loadImage("buttons/jugar1.png");          // Boton jugar
+  jugar2 = loadImage("buttons/jugar2.png");
+  creditos1 = loadImage("buttons/creditos1.png");    // Boton creditos
+  creditos2 = loadImage("buttons/creditos2.png");
+    back = loadImage("buttons/back.png");
+  back1 = loadImage("buttons/back1.png");
+}
+
+
 void pintarBotonCreditos() {
   /* Función que pinta, maneja el control 
   de flujo y animación del boton creditos 
@@ -57,8 +118,6 @@ if (mousePressed)
 }
 
 void playMusic(){
-  minim = new Minim(this);
-  groove = minim.loadFile("sounds/musicaInicio.mp3");
   groove.loop();
 }
 
@@ -121,7 +180,7 @@ tint(255);
             sw=false;
             usuario2.alive = true;
             if (mundoAct<12){
-              cargarMundo ("backgrounds/fondoMundo.jpg","levels/mundo"+mundoAct+".txt");  
+              loadLevel ("backgrounds/fondoMundo.jpg","levels/mundo"+mundoAct+".txt");  
               mundoAct++;  
             }else
               pantalla=3;
@@ -172,7 +231,7 @@ public void animacion (){
   
 }
 
-public void cargarMundo (String fondo, String matMundo) {
+public void loadLevel (String fondo, String matMundo) {
   fondoMundo = loadImage(fondo);
   lines = loadStrings(matMundo);
   //Calcular cantidad de Baldosas y monsters en el mundo
