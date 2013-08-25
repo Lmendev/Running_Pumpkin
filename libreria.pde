@@ -64,31 +64,31 @@ public void loadButtons(){
 boolean eventoActivado=false, eventoFinalizado=false;
 
 public void drawButton(button boton, boolean ultimoButton){
-  
+  //--Controlador botones--//
   if(mouseX>boton.getPosX() && mouseY>boton.getPosY() && mouseX<boton.getLimitX() && mouseY<boton.getLimitY()){
-    image(boton.getOverImage(), boton.getPosX(), boton.getPosY());
- 
+    // Si el cursor se encuentra sobre el boton //
+    image(boton.getOverImage(), boton.getPosX(), boton.getPosY());  // Pintar overImage
     if(boton.getTarget() && eventoFinalizado){
       pantalla = boton.getNextScreen();
+      boton.setTarget(false);
       eventoFinalizado=false;
     }
-    
     if(eventoActivado){
       boton.setTarget(true);
       eventoActivado=false;
     }
   }else{
-    image(boton.getDefaultImage(), boton.getPosX(), boton.getPosY());
-    
-    if(boton.getTarget() && eventoFinalizado){
+    // Si el cursor no se encuentra sobre el boton //
+    image(boton.getDefaultImage(), boton.getPosX(), boton.getPosY());  // Pintar defaultImage
+    if(boton.getTarget() && eventoFinalizado)
       boton.setTarget(false);
-    }
   }
+  
   if(eventoFinalizado && ultimoButton)
-      eventoFinalizado=false;
+    eventoFinalizado=false;
   
   if (eventoActivado && ultimoButton)
-      eventoActivado=false;
+    eventoActivado=false;
 }
 
 public void mousePressed() {
