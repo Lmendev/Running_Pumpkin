@@ -64,72 +64,23 @@ public void loadButtons(){
 
 //--Controlador botones--//
 
-public void drawButtons(){
+public void drawButton(PImage defaultImage, PImage overImage, int posImageX, int posImageY, int nextScreen){
+  int limitImageX = posImageX + defaultImage.width;  // Limite imagen X
+  int limitImageY = posImageY + defaultImage.height;  // Limite imagen Y
   
-}
-
-public void pintarBotonJugar () {
-  /* Función que pinta, maneja el control 
-  de flujo y animación del boton jugar 
-  en la pantalla de inicio */
-  
-  if(mouseX<325 && mouseX>100 && mouseY<280 && mouseY>200){
-    image(jugar2, 100, 200);
+  if(mouseX>posImageX && mouseY>posImageY && mouseX<limitImageX && mouseY<limitImageY){
+    image(overImage, posImageX, posImageY);
     if(mousePressed)
-      pantalla=1;
+      pantalla = nextScreen;
   }else
-    image(jugar1, 100, 200);
+    image(defaultImage, posImageX, posImageY);
 }
 
-
-void pintarBotonCreditos() {
-  /* Función que pinta, maneja el control 
-  de flujo y animación del boton creditos 
-  en la pantalla de inicio */
-  
-  if(mouseX<325&&mouseX>100&&mouseY<380&&mouseY>300){
-    image(creditos2, 100, 300);
-    if(mousePressed)
-      pantalla=2;
-  }else
-    image(creditos1, 100, 300);  
-}
-
-void pintarBotonRegresar() {
-  /* Función que pinta, maneja el control 
-  de flujo y animación del boton back 
-  en la pantalla de inicio */
-
-  image(back,880,10);
-    if(mouseX<72+880&&mouseX>880&&mouseY<72&&mouseY>10){
-      image(back1, 880, 10);
-        if(mousePressed){
-          mundoAct=1;
-          pantalla=0;
-        }
-    }
-}
-
-void pintarBotonRegresar2() {
-  image(back,10,10);
-      if(mouseX<72&&mouseX>10&&mouseY<72&&mouseY>10){
-        image(back1, 10, 10);
-        if(mousePressed)
-             pantalla=0;
-      }
-}
-
-void pintarBotonRegresar3(){
-image(back,10,10);
-      if(mouseX<72&&mouseX>10&&mouseY<72&&mouseY>10){
-        image(back1, 10, 10);
-          if(mousePressed)
-            pantalla=0;
-      }
+void mouseMoved() {
+  println(mouseX);
 }
 
 //--Fin controlador botones--//
-
 
 
 void controlAnimacionMouse(){

@@ -59,25 +59,27 @@ public void draw(){
   switch(pantalla){
     case 0:  //--Pantalla de inicio--//
       image(fondoInicio, 0, 0);  // Pintar imagen de fondo
-      pintarBotonJugar();        // Pintar boton jugar
-      pintarBotonCreditos();     // Pintar boton creditos
+      drawButton(jugar1, jugar2, 100, 200, 1);        // Pintar boton jugar
+      drawButton(creditos1, creditos2, 100, 300, 2);     // Pintar boton creditos
     break;  //--Final pantalla de inicio--//
        
     case 1:  //--Pantalla de juego--//
       image(fondoMundo, 0, 0);  // Pintar imagen de fondo
-      pintarBotonRegresar3();   // Pintar boton regresar
+      drawButton(back, back1, 10, 10, 0);   // Pintar boton regresar
       pintarBaldosas();         // Pintar baldosas del nivel   
       controlCalabaza();        // Controlador de calabaza
     break; //--Final pantalla de juego--//
       
     case 2:  //--Pantalla creditos--//
       image(creditos, 0, 0);  // Pintar imagen de fondo
-      pintarBotonRegresar2(); // Pintar boton regresar
+      drawButton(back, back1, 10, 10, 0); // Pintar boton regresar
+  
     break; //--Final pantalla creditos--//
     
     case 3:  //--Pantalla juego terminado--//
       image(win, 0, 0);         // Pintar imagen de fondo
-      pintarBotonRegresar();    // Pintar boton regresar
+      drawButton(back, back1, 880, 10, 0);    // Pintar boton regresar
+      mundoAct=1;
     break;  //--Final pantalla juego terminado--//   
   }
   
