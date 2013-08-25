@@ -51,12 +51,9 @@ public void loadSounds(){
 
 public void loadButtons(){
   //--Cargar imagenes botones--//
-  jugar1 = loadImage("buttons/jugar1.png");  // Cargar Boton jugar
-  jugar2 = loadImage("buttons/jugar2.png");  // Cargar Boton jugar2
-  creditos1 = loadImage("buttons/creditos1.png");  // Cargar Boton creditos 
-  creditos2 = loadImage("buttons/creditos2.png");  // Cargar Boton creditos2
-  back = loadImage("buttons/back.png");  // Cargar Boton regresar
-  back1 = loadImage("buttons/back1.png");  // Cargar boton regresar2
+  jugarButton = new button("buttons/jugar1.png", "buttons/jugar2.png", 100, 200, 1);
+  creditosButton = new button("buttons/creditos1.png", "buttons/creditos2.png", 100, 300, 2);
+  backButton = new button("buttons/back.png", "buttons/back1.png", 10, 10, 0);
 }
 
 //--Fin cargar imagenes--//
@@ -64,20 +61,42 @@ public void loadButtons(){
 
 //--Controlador botones--//
 
-public void drawButton(PImage defaultImage, PImage overImage, int posImageX, int posImageY, int nextScreen){
-  int limitImageX = posImageX + defaultImage.width;  // Limite imagen X
-  int limitImageY = posImageY + defaultImage.height;  // Limite imagen Y
+boolean eventoActivado=false, eventoFinalizado=false;
+
+public void drawButton(button boton, boolean ultimoButton){
   
-  if(mouseX>posImageX && mouseY>posImageY && mouseX<limitImageX && mouseY<limitImageY){
-    image(overImage, posImageX, posImageY);
-    if(mousePressed)
-      pantalla = nextScreen;
-  }else
-    image(defaultImage, posImageX, posImageY);
+  if(mouseX>boton.getPosX() && mouseY>boton.getPosY() && mouseX<boton.getLimitX() && mouseY<boton.getLimitY()){
+    image(boton.getOverImage(), boton.getPosX(), boton.getPosY());
+ 
+    if(boton.getTarget() && eventoFinalizado){
+      pantalla = boton.getNextScreen();
+      eventoFinalizado=false;
+    }
+    
+    if(eventoActivado){
+      boton.setTarget(true);
+      eventoActivado=false;
+    }
+  }else{
+    image(boton.getDefaultImage(), boton.getPosX(), boton.getPosY());
+    
+    if(boton.getTarget() && eventoFinalizado){
+      boton.setTarget(false);
+    }
+  }
+  if(eventoFinalizado && ultimoButton)
+      eventoFinalizado=false;
+  
+  if (eventoActivado && ultimoButton)
+      eventoActivado=false;
 }
 
-void mouseMoved() {
-  println(mouseX);
+public void mousePressed() {
+  eventoActivado = true;
+}
+
+public void mouseReleased(){
+  eventoFinalizado = true;
 }
 
 //--Fin controlador botones--//
@@ -138,7 +157,7 @@ tint(255);
                 
               }
             drawBody(usuario2);
-            }else{//drawBody(usuario2); 
+            }else{//drawBody(usuario2);
             } 
           }else{
             if(!usuario2.alive)

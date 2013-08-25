@@ -33,12 +33,13 @@ int [][] mundo= new int[8][13];
 Monster[] monsters;
 boolean sw=false;
 boolean colisionando=false,tocado=false;
-int ani = 0;
-boolean sw2=false;
+int ani = 0, nextScreen=0;
+boolean sw2=false, mouseOver=false;
+button jugarButton, creditosButton, backButton;
 
 public void setup () {
   size(960, 600, P3D);   // Tamaño ventana 960x 600
-  //noCursor();            // Ocultar cursor
+  noCursor();            // Ocultar cursor
   
   loadSounds();      // Cargar sonido
   loadCharacter();   // Cargar personaje
@@ -59,26 +60,26 @@ public void draw(){
   switch(pantalla){
     case 0:  //--Pantalla de inicio--//
       image(fondoInicio, 0, 0);  // Pintar imagen de fondo
-      drawButton(jugar1, jugar2, 100, 200, 1);        // Pintar boton jugar
-      drawButton(creditos1, creditos2, 100, 300, 2);     // Pintar boton creditos
+      drawButton(jugarButton, false);        // Pintar boton jugar
+      drawButton(creditosButton, true);     // Pintar boton creditos
     break;  //--Final pantalla de inicio--//
        
     case 1:  //--Pantalla de juego--//
       image(fondoMundo, 0, 0);  // Pintar imagen de fondo
-      drawButton(back, back1, 10, 10, 0);   // Pintar boton regresar
+      drawButton(backButton, true);   // Pintar boton regresar
       pintarBaldosas();         // Pintar baldosas del nivel   
       controlCalabaza();        // Controlador de calabaza
     break; //--Final pantalla de juego--//
       
     case 2:  //--Pantalla creditos--//
       image(creditos, 0, 0);  // Pintar imagen de fondo
-      drawButton(back, back1, 10, 10, 0); // Pintar boton regresar
+      drawButton(backButton, true); // Pintar boton regresar
   
     break; //--Final pantalla creditos--//
     
     case 3:  //--Pantalla juego terminado--//
       image(win, 0, 0);         // Pintar imagen de fondo
-      drawButton(back, back1, 880, 10, 0);    // Pintar boton regresar
+      //drawButton(back, back1, 880, 10, 0);    // Pintar boton regresar
       mundoAct=1;
     break;  //--Final pantalla juego terminado--//   
   }
