@@ -1,6 +1,7 @@
 /*--Desarrolladores--//
 Luis Antonio Mendoza Marriaga   @lmendoza92
 Adriana Gallon                  @apgallon
+Angelica Acosta
 */
 
 //--Librerias--//
