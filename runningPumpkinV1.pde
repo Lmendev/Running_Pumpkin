@@ -32,6 +32,7 @@ int k, u, cantB,cantM;
 int [][] mundo= new int[8][13];
 Monster[] monsters;
 boolean sw=false;
+boolean colisionando=false,tocado=false;
 int ani = 0;
 boolean sw2=false;
 

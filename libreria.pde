@@ -133,10 +133,19 @@ image(back,10,10);
 
 
 void controlAnimacionMouse(){
-  if (mousePressed)
-    image(spritecursor.get(28,0,28,31), mouseX-spritecursor.width/4,mouseY-spritecursor.height/2);
-  else
+  
+  if (mousePressed){
+    if(mousePossition.dist(usuario2.getLocation())<=usuario2.getDimension().y/2)
+      tocado=true;
+    if(tocado)
+        image(spritecursor.get(28,0,28,31),usuario2.getLocation().x-11,usuario2.getLocation().y-8);
+     else
+        image(spritecursor.get(28,0,28,31), mouseX-spritecursor.width/4,mouseY-spritecursor.height/2);
+  }
+  else{
     image(spritecursor.get(0,0,28,31), mouseX-spritecursor.width/4,mouseY-spritecursor.height/2);
+    tocado=false;
+  }
 }
 
 void playMusic(){
@@ -154,6 +163,7 @@ for (k=0;k<cantB;k++)
 void controlCalabaza(){
 tint(255);
       if (usuario2.alive){
+        colisionando=false;
         if(!usuario2.isOut(mundo)) {
           
           if(mousePressed){
@@ -365,8 +375,11 @@ public void drawBody(Monster b) {
       if (dist(b.getX()+10,b.getY(), usuario2.locationX(),usuario2.locationY())<60){
         usuario2.alive=false;
         groove2 = minim2.loadFile("sounds/scream3.mp3", 512);
+        if(!colisionando){
         groove2.play();
+        }
         usuario2.setImage(loadImage("character/calabaza1.png"));
+        colisionando =true;
         //sw2=false;
         //usuario2.setLocation(usuario2.getxInicial(),usuario2.getyInicial());
       }           
