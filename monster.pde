@@ -1,8 +1,9 @@
-class Monster {
-  //Variables
+
+public class monster {
+
+  //--Atributos--//
   private PImage imagen;
-  private int x;
-  private int y;
+  private int x, y;
   private int st;
   private float theta;
   private int distancia;
@@ -12,11 +13,10 @@ class Monster {
   private int animacion;
   private float scaleX=0,scaleY=1;
   
-  //Constructor
-  public Monster(String imagen, int x, int y, int animacion){
+  //--Constructor--//
+  public monster(String imagen, int x, int y, int animacion){
     this.imagen = loadImage(imagen);
-    this.x = x;
-    this.y = y;
+    this.x = x; this.y = y;
     this.st=1;
     this.theta = 0;
     this.distancia=6;

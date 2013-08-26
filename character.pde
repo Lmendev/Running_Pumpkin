@@ -1,15 +1,17 @@
-class Body {
-  PVector location;
-  PVector dimension; //
-  PVector scale; //x= xFactor, y=yFactor
-  float rotation;
-  boolean alive;
-  PImage imageTexture;
-  int stamina;
-  int xInicial;
-  int yInicial;
+
+public class character {
+
+  private PVector location;
+  private PVector dimension; 
+  private PVector scale; //x= xFactor, y=yFactor
+  private float rotation;
+  private boolean alive;
+  private PImage imageTexture;
+  private int stamina;
+  private int xInicial;
+  private int yInicial;
   
-  Body(int x, int y, PImage texture,int stamina){
+public character(int x, int y, PImage texture,int stamina){
     location = new PVector(x,y);
     xInicial =x;
     yInicial=y;
@@ -20,47 +22,48 @@ class Body {
     stamina  = 0;
   }
   
-  PVector getLocation(){
+public PVector getLocation(){
     return location;
   }
   void setLocation(int x ,int y){
     location.x=x;
     location.y=y;
   }
-  PVector getDimension(){
+  
+public  PVector getDimension(){
     return dimension;
   }
-  float getRotation(){
+public  float getRotation(){
     return rotation;
   }
-  void setRotation(float r){
+public  void setRotation(float r){
     rotation = r;
   }
-  boolean isAlive(){
+public  boolean isAlive(){
     return alive;
   }
-  void die(){
+public void die(){
     alive=false;
   }
   void live(){
     alive=true;
   }
-  int getStamina(){
+public  int getStamina(){
     return stamina;
   }
-  void setStamina(int s){
+public  void setStamina(int s){
     stamina = s;
   }
-  void setImage(PImage Image){
+public  void setImage(PImage Image){
     imageTexture = Image;
     dimension.x= imageTexture.width;
     dimension.y= imageTexture.height;
   }
-  void setScale(float w, float h){
+public  void setScale(float w, float h){
     scale.x=w;
     scale.y=h;
   }
-  PVector getScale(){
+public  PVector getScale(){
     return scale;
   }
   public PVector getVertex(int i){
@@ -128,7 +131,7 @@ class Body {
     face.y=v1.y-v0.y;
     return face;
   }
-  public boolean intersects(Body b){
+  public boolean intersects(character b){
     PVector minmax1=new PVector(0,0);
     PVector minmax2=new PVector(0,0);
     boolean coll=true;
