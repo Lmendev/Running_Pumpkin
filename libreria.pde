@@ -352,9 +352,7 @@ public void drawBody(monster b) {
   popMatrix();
 }
 
-void stop()
-{
-  // always close Minim audio classes when you are done with them
+void stop() {
   groove.close();
   groove2.close();
   minim.stop();

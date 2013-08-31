@@ -27,35 +27,32 @@ Angelica Acosta                 @A_N_S_H_Y
   //Libreria de audio
 
 //--Declaraci\u00f3n de variables--//
-Minim minim;
 AudioPlayer groove;
-PImage fondoInicio; 
-PImage jugar1, jugar2, creditos1, creditos2;
-PImage spritecursor;
-int pantalla=0, mundoAct=7;
-PImage creditos, back, back1;
-PImage win;
-Minim minim2;
 AudioSample groove2; 
-character pumpkin;
+Minim minim;
+
+PImage fondoInicio; 
+PImage spritecursor;
+PImage creditos;
+PImage win;
 PImage fondoMundo;
 PImage baldosa;
-PImage calabazaImage;
-PImage brujaImage, momiaImage, loboImage, calaberaImage;
+PImage calabazaImage, brujaImage, momiaImage, loboImage, calaberaImage;
 PImage animacion;
-PImage imagen;
-String[] lines, posiciones;
+
 PVector[] posBaldosas;
 PVector mousePossition = new PVector(mouseX,mouseY);
-PVector mouseDistance = new PVector(0,0);
+String[] lines, posiciones;
+int pantalla=0, mundoAct=7;
 int k, u, cantB,cantM;
 int [][] mundo= new int[8][13];
-monster[] monsters;
+int ani = 0, nextScreen=0;
 boolean sw=false;
 boolean colisionando=false,tocado=false;
-int ani = 0, nextScreen=0;
 boolean sw2=false, mouseOver=false;
 button jugarButton, creditosButton, backButton;
+character pumpkin;
+monster[] monsters;
 
 public void setup () {
   size(960, 600, P3D);   // Tama\u00f1o ventana 960x 600
@@ -181,93 +178,105 @@ public class character {
   private int xInicial;
   private int yInicial;
   
-public character(int x, int y, PImage texture,int stamina) {
-  location = new PVector(x,y);
-  xInicial =x;
-  yInicial=y;
-  rotation = 0; 
-  alive = true;
-  imageTexture = texture.get();
-  dimension = new PVector(texture.width,texture.height);
-  stamina  = 0;
-}
+  public character(int x, int y, PImage texture, int stamina) {
+    location = new PVector(x,y);
+    xInicial = x;
+    yInicial = y;
+    rotation = 0; 
+    alive = true;
+    imageTexture = texture.get();
+    dimension = new PVector(texture.width, texture.height);
+    stamina  = 0;
+  }
   
-public PVector getLocation(){
+  public PVector getLocation() {
     return location;
   }
-  public void setLocation(int x ,int y){
+
+  public void setLocation(int x, int y) {
     location.x=x;
     location.y=y;
   }
   
-public  PVector getDimension(){
+  public PVector getDimension() {
     return dimension;
   }
-public  float getRotation(){
+
+  public float getRotation() {
     return rotation;
   }
-public  void setRotation(float r){
+
+  public void setRotation(float r) {
     rotation = r;
   }
-public  boolean isAlive(){
+
+  public  boolean isAlive() {
     return alive;
   }
-public void die(){
+
+  public void die() {
     alive=false;
   }
-  public void live(){
+    
+  public void live() {
     alive=true;
   }
-public  int getStamina(){
+
+  public int getStamina() {
     return stamina;
   }
-public  void setStamina(int s){
+
+  public void setStamina(int s) {
     stamina = s;
   }
-public  void setImage(PImage Image){
+
+  public void setImage(PImage Image) {
     imageTexture = Image;
     dimension.x= imageTexture.width;
     dimension.y= imageTexture.height;
   }
-public  void setScale(float w, float h){
+
+  public void setScale(float w, float h) {
     scale.x=w;
     scale.y=h;
   }
-public  PVector getScale(){
+
+  public  PVector getScale() {
     return scale;
   }
-  public PVector getVertex(int i){
+
+  public PVector getVertex(int i) {
     float x=0, y=0;
-    switch(i){
+    switch(i) {
       case 0:
         x=location.x-(dimension.x/2);
-	y=location.y-(dimension.y/2);
-	break;
+        y=location.y-(dimension.y/2);
+      break;
 
       case 1:
-	x=location.x+(dimension.x/2);
-	y=location.y-(dimension.y/2);
-        break;
+        x=location.x+(dimension.x/2);
+        y=location.y-(dimension.y/2);
+      break;
       
       case 2:
         x=location.x+(dimension.x/2);
         y=location.y+(dimension.y/2);
-	break;
+      break;
 
       case 3:
-	x=location.x-(dimension.x/2);
-	y=location.y+(dimension.y/2);
-	break;
+        x=location.x-(dimension.x/2);
+        y=location.y+(dimension.y/2);
+      break;
     }
-    
-    float  nx=location.x+(x-location.x)*PApplet.cos(rotation)-(y-location.y)*PApplet.sin(rotation);
-    float ny=location.y+(x-location.x)*PApplet.sin(rotation)+(y-location.y)*PApplet.cos(rotation);
-    return new PVector(nx,ny);
+    float nx = location.x + (x-location.x)*PApplet.cos(rotation) - (y-location.y)*PApplet.sin(rotation);
+    float ny = location.y + (x-location.x)*PApplet.sin(rotation) + (y-location.y)*PApplet.cos(rotation);
+    return new PVector(nx, ny);
   }
-  public PVector getInterval(PVector axis){
-    float val= axis.dot(getVertex(0));
-    PVector minmax= new PVector(val,val);
-    for (int i=1;i<=3;i++){
+
+  public PVector getInterval(PVector axis) {
+    float val = axis.dot(getVertex(0));
+    PVector minmax = new PVector(val,val);
+    for (int i=1;i<=3;i++) {
       val= axis.dot(getVertex(i));
       minmax.x=PApplet.min(minmax.x,val);
       minmax.y=PApplet.max(minmax.y,val);
@@ -275,86 +284,95 @@ public  PVector getScale(){
     return minmax;
   }
   
-  public PVector getFaceDir(int i){
+  public PVector getFaceDir(int i) {
     PVector face= new PVector();
     PVector v0 =new PVector();;
     PVector v1= new PVector();
-    switch(i){
+    switch(i) {
       case 0:
-        v0= getVertex(0);
-        v1= getVertex(1);
-	break;
+        v0 = getVertex(0);
+        v1 = getVertex(1);
+      break;
+
       case 1:
-        v0= getVertex(1);
-	v1= getVertex(2);
-	break;
+        v0 = getVertex(1);
+        v1 = getVertex(2);
+      break;
+
       case 2:
-	v0= getVertex(2);
-	v1= getVertex(3);
-	break;
+        v0 = getVertex(2);
+        v1 = getVertex(3);
+      break;
+      
       case 3: 
-	v0= getVertex(3);
-	v1= getVertex(0);
-	break;
+        v0 = getVertex(3);
+        v1 = getVertex(0);
+      break;
     }
-    face.x=v1.x-v0.x;
-    face.y=v1.y-v0.y;
+    face.x=v1.x - v0.x;
+    face.y=v1.y - v0.y;
     return face;
   }
-  public boolean intersects(character b){
-    PVector minmax1=new PVector(0,0);
-    PVector minmax2=new PVector(0,0);
+
+  public boolean intersects(character b) {
+    PVector minmax1 = new PVector(0,0);
+    PVector minmax2 = new PVector(0,0);
     boolean coll=true;
-    for (int i =0; i<4; i++){
-      minmax1=getInterval(getFaceDir(i));
-      minmax2= b.getInterval(getFaceDir(i));
-      if(minmax1.y<minmax2.x || minmax2.y<minmax1.x ){
+    for (int i =0; i<4; i++) {
+      minmax1 = getInterval(getFaceDir(i));
+      minmax2 = b.getInterval(getFaceDir(i));
+      if(minmax1.y<minmax2.x || minmax2.y<minmax1.x ) 
         coll= false;
-      }
     }
-    if(coll){
-      for(int i=0;i<4;i++){
-        minmax1=getInterval(b.getFaceDir(i));
-        minmax2=b.getInterval(b.getFaceDir(i));
-        if(minmax1.y<minmax2.x||minmax2.y<minmax1.x){
+    if(coll) {
+      for(int i=0;i<4;i++) {
+        minmax1 = getInterval(b.getFaceDir(i));
+        minmax2 = b.getInterval(b.getFaceDir(i));
+        if(minmax1.y<minmax2.x||minmax2.y<minmax1.x)
           coll=false;
-        }
       } 
     }
     return coll;
   }
-  public PVector[] celda(){
-    PVector[] nloc= new PVector[4] ;
-    nloc[0]=new PVector(PApplet.parseInt(location.x/80),PApplet.parseInt((location.y-(this.imageTexture.height/2)+3)/75));
-    nloc[1]=new PVector (PApplet.parseInt((location.x+(this.imageTexture.width/2)-3)/80),PApplet.parseInt(location.y/75));
-    nloc[2]=new PVector(PApplet.parseInt(location.x/80),PApplet.parseInt((location.y+(this.imageTexture.height/2)-3)/75));
-    nloc[3]=new PVector(PApplet.parseInt((location.x-(this.imageTexture.width/2)+3)/80),PApplet.parseInt(location.y/75));
+
+  public PVector[] celda() {
+    PVector[] nloc = new PVector[4] ;
+    nloc[0] = new PVector(PApplet.parseInt(location.x/80), PApplet.parseInt((location.y - (this.imageTexture.height/2) + 3)/75));
+    nloc[1] = new PVector (PApplet.parseInt((location.x + (this.imageTexture.width/2) - 3)/80), PApplet.parseInt(location.y/75));
+    nloc[2] = new PVector(PApplet.parseInt(location.x/80), PApplet.parseInt((location.y + (this.imageTexture.height/2) - 3)/75));
+    nloc[3] = new PVector(PApplet.parseInt((location.x - (this.imageTexture.width/2) + 3)/80), PApplet.parseInt(location.y/75));
     return nloc;
   }
-  public boolean isOut(int[][] mat){
-    for(int i=0;i<celda().length;i++){
-      if(mat[PApplet.parseInt(celda()[i].y)][PApplet.parseInt(celda()[i].x)]!=1 && mat[PApplet.parseInt(celda()[i].y)][PApplet.parseInt(celda()[i].x)]!=2)
-        return true;
-      }
-    return false;
-  }
-  public boolean isFinish(int[][] mat){
-    for(int i=0;i<celda().length;i++){
-      if(mat[PApplet.parseInt(celda()[i].y)][PApplet.parseInt(celda()[i].x)]==3)
+
+  public boolean isOut(int[][] mat) {
+    for(int i=0;i<celda().length;i++) {
+      if(mat[PApplet.parseInt(celda()[i].y)][PApplet.parseInt(celda()[i].x)] != 1 && mat[PApplet.parseInt(celda()[i].y)][PApplet.parseInt(celda()[i].x)] != 2)
         return true;
     }
     return false;
   }
-  public int getxInicial(){
+
+  public boolean isFinish(int[][] mat) {
+    for(int i=0; i<celda().length; i++) {
+      if(mat[PApplet.parseInt(celda()[i].y)][PApplet.parseInt(celda()[i].x)] == 3)
+        return true;
+    }
+    return false;
+  }
+
+  public int getxInicial() {
     return this.xInicial;
   }
-  public int getyInicial(){
+  
+  public int getyInicial() {
     return this.yInicial;        
   }
-  public float locationX(){
+
+  public float locationX() {
     return location.x;
   }
-  public float locationY(){
+
+  public float locationY() {
     return location.y;
   }
 }
@@ -405,11 +423,13 @@ public void loadMonsters(){
 
 public void loadSounds(){
   //--Cargar musica--//
-  minim2 = new Minim(this);
   minim = new Minim(this);
   
   groove = minim.loadFile("sounds/musicaInicio.mp3");  // Cargar musica de fondo
+  if(groove==null)  println("No se pudo cargar el archivo 'sounds/musicaInicio.mp3'.");
+  
   groove2 = minim.loadSample("sounds/scream3.mp3");  // Cargar sonido scream;  
+  if(groove2==null)  println("No se pudo cargar el archivo 'sounds/scream3.mp3'.");
 }
 
 public void loadTiles(){
@@ -710,9 +730,7 @@ public void drawBody(monster b) {
   popMatrix();
 }
 
-public void stop()
-{
-  // always close Minim audio classes when you are done with them
+public void stop() {
   groove.close();
   groove2.close();
   minim.stop();

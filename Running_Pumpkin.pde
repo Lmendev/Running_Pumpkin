@@ -9,34 +9,32 @@ Angelica Acosta                 @A_N_S_H_Y
 import ddf.minim.*;  //Libreria de audio
 
 //--Declaración de variables--//
-Minim minim;
 AudioPlayer groove;
-PImage fondoInicio; 
-PImage jugar1, jugar2, creditos1, creditos2;
-PImage spritecursor;
-int pantalla=0, mundoAct=7;
-PImage creditos, back, back1;
-PImage win;
 AudioSample groove2; 
-character pumpkin;
+Minim minim;
+
+PImage fondoInicio; 
+PImage spritecursor;
+PImage creditos;
+PImage win;
 PImage fondoMundo;
 PImage baldosa;
-PImage calabazaImage;
-PImage brujaImage, momiaImage, loboImage, calaberaImage;
+PImage calabazaImage, brujaImage, momiaImage, loboImage, calaberaImage;
 PImage animacion;
-PImage imagen;
-String[] lines, posiciones;
+PVector mouseDistance = new PVector(0,0);
 PVector[] posBaldosas;
 PVector mousePossition = new PVector(mouseX,mouseY);
-PVector mouseDistance = new PVector(0,0);
+String[] lines, posiciones;
+int pantalla=0, mundoAct=7;
 int k, u, cantB,cantM;
 int [][] mundo= new int[8][13];
-monster[] monsters;
-boolean sw=false;
-boolean colisionando=false,tocado=false;
 int ani = 0, nextScreen=0;
+boolean sw=false;
+boolean colisionando=false, tocado=false;
 boolean sw2=false, mouseOver=false;
 button jugarButton, creditosButton, backButton;
+character pumpkin;
+monster[] monsters;
 
 public void setup () {
   size(960, 600, P3D);   // Tamaño ventana 960x 600
