@@ -11,16 +11,16 @@ public class character {
   private int xInicial;
   private int yInicial;
   
-public character(int x, int y, PImage texture,int stamina){
-    location = new PVector(x,y);
-    xInicial =x;
-    yInicial=y;
-    rotation = 0; 
-    alive = true;
-    imageTexture = texture.get();
-    dimension = new PVector(texture.width,texture.height);
-    stamina  = 0;
-  }
+public character(int x, int y, PImage texture,int stamina) {
+  location = new PVector(x,y);
+  xInicial =x;
+  yInicial=y;
+  rotation = 0; 
+  alive = true;
+  imageTexture = texture.get();
+  dimension = new PVector(texture.width,texture.height);
+  stamina  = 0;
+}
   
 public PVector getLocation(){
     return location;

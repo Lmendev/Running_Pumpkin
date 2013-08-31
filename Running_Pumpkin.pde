@@ -1,7 +1,8 @@
 /*--Desarrolladores--//
+Running_Pumpkin un proyecto iniciado por:
 Luis Antonio Mendoza Marriaga   @lmendoza92
 Adriana Gallon                  @apgallon
-Angelica Acosta
+Angelica Acosta                 @A_N_S_H_Y
 */
 
 //--Librerias--//
@@ -16,8 +17,7 @@ PImage spritecursor;
 int pantalla=0, mundoAct=7;
 PImage creditos, back, back1;
 PImage win;
-Minim minim2;
-AudioPlayer groove2; 
+AudioSample groove2; 
 character pumpkin;
 PImage fondoMundo;
 PImage baldosa;

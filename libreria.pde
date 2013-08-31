@@ -45,11 +45,13 @@ public void loadMonsters(){
 
 public void loadSounds(){
   //--Cargar musica--//
-  minim2 = new Minim(this);
   minim = new Minim(this);
   
   groove = minim.loadFile("sounds/musicaInicio.mp3");  // Cargar musica de fondo
-  groove2 = minim2.loadFile("sounds/scream3.mp3");  // Cargar sonido scream;  
+  if(groove==null)  println("No se pudo cargar el archivo 'sounds/musicaInicio.mp3'.");
+  
+  groove2 = minim.loadSample("sounds/scream3.mp3");  // Cargar sonido scream;  
+  if(groove2==null)  println("No se pudo cargar el archivo 'sounds/scream3.mp3'.");
 }
 
 public void loadTiles(){
@@ -99,54 +101,56 @@ public void mousePressed() {
   eventoActivado = true;
 }
 
-public void mouseReleased(){
+public void mouseReleased() {
   eventoFinalizado = true;
 }
 
 //--Fin controlador botones--//
 
 
-public void controlAnimacionMouse(){
-  if (mousePressed){
-    if(mousePossition.dist(pumpkin.getLocation())<=pumpkin.getDimension().y/2)
+public void controlAnimacionMouse() {
+  if(mousePressed) {
+    if(mousePossition.dist(pumpkin.getLocation()) <= pumpkin.getDimension().y/2)
       tocado=true;
+    else {
+      tocado=false;
+    }
     if(tocado)
-        image(spritecursor.get(28,0,28,31),pumpkin.getLocation().x-11,pumpkin.getLocation().y-8);
-     else
-        image(spritecursor.get(28,0,28,31), mouseX-spritecursor.width/4,mouseY-spritecursor.height/2);
-  }
-  else{
+      image(spritecursor.get(28, 0, 28, 31), pumpkin.getLocation().x - 14, pumpkin.getLocation().y - 15);
+    else
+      image(spritecursor.get(28, 0, 28, 31), mouseX - spritecursor.width/4, mouseY - spritecursor.height/2);
+  }else {
     image(spritecursor.get(0,0,28,31), mouseX-spritecursor.width/4,mouseY-spritecursor.height/2);
     tocado=false;
   }
 }
+
 
 public void playMusic(){
   groove.loop();
 }
 
 public void pintarBaldosas(){
-  for (k=0;k<cantB;k++)
+  for(k=0;k<cantB;k++)
     image(baldosa, posBaldosas[k].x, posBaldosas[k].y);
-    for (u=0;u<cantM;u++)
+    for(u=0;u<cantM;u++)
       drawBody(monsters[u]);
 }
 
-
 public void controlCalabaza(){
   tint(255);
+  mousePossition.x=mouseX;
+  mousePossition.y=mouseY;
   if (pumpkin.alive){
     colisionando=false;
     if(!pumpkin.isOut(mundo)) {
       if(mousePressed){
         if(pumpkin.alive) {
           if(!sw){
-            mousePossition.x=mouseX;
-            mousePossition.y=mouseY;
             if(mousePossition.dist(pumpkin.getLocation())<=pumpkin.getDimension().y/2){
               sw=true;
-              mouseDistance.x=pumpkin.getLocation().x-mouseX;
-              mouseDistance.y=pumpkin.getLocation().y-mouseY;
+              mouseDistance.x=pumpkin.getLocation().x - mouseX;
+              mouseDistance.y=pumpkin.getLocation().y - mouseY;
             }
           }else{
             if(!sw2 && mousePressed)
@@ -166,8 +170,7 @@ public void controlCalabaza(){
       if(!pumpkin.isFinish(mundo)){
         pumpkin.alive=false;
         pumpkin.setImage(loadImage("character/calabaza1.png"));
-        groove2 = minim2.loadFile("sounds/scream3.mp3", 512);
-        groove2.play();
+        groove2.trigger();
         //pumpkin.setLocation(pumpkin.getxInicial(),pumpkin.getyInicial());
       }else{
         sw=false;
@@ -185,8 +188,7 @@ public void controlCalabaza(){
   }
 }
 
-
-public void animacion (){
+public void animacion() {
   if(ani<5)
    image(animacion.get(0,0,164,174), pumpkin.locationX()-95, pumpkin.locationY()-100);
   else if (ani<10)
@@ -203,6 +205,7 @@ public void animacion (){
                 pumpkin.setLocation(pumpkin.getxInicial(),pumpkin.getyInicial());
                 pumpkin.alive = true;
                 sw2=true;
+                tocado=false;
               }
   ani++;
 }
@@ -264,7 +267,6 @@ public void loadLevel (String fondo, String matMundo) {
   }
 }
     
-    
 public void drawBody(character b){
   pushMatrix();
     PVector location =b.getLocation();
@@ -320,7 +322,7 @@ public void drawBody(monster b) {
       break;
     
     case 3:// Animacion 4
-      //animaciòn de colision
+      //--animaciòn de colision--//
       translate(b.getX(), b.getY());
       image(b.getImage(), -20, -26);
       if(b.getTiempoAct() > b.getTiempo()){
@@ -334,12 +336,11 @@ public void drawBody(monster b) {
       }
       b.setTiempoAct(b.getTiempoAct()+2);
       
-      //colision
+      //--Colision--//
       if (dist(b.getX()+10,b.getY(), pumpkin.locationX(),pumpkin.locationY())<60){
         pumpkin.alive=false;
-        groove2 = minim2.loadFile("sounds/scream3.mp3", 512);
-        if(!colisionando){
-        groove2.play();
+        if(!colisionando) {
+          groove2.trigger();
         }
         pumpkin.setImage(loadImage("character/calabaza1.png"));
         colisionando =true;
@@ -351,3 +352,12 @@ public void drawBody(monster b) {
   popMatrix();
 }
 
+void stop()
+{
+  // always close Minim audio classes when you are done with them
+  groove.close();
+  groove2.close();
+  minim.stop();
+ 
+  super.stop();
+}
