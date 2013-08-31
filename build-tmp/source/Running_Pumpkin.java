@@ -39,7 +39,7 @@ PImage fondoMundo;
 PImage baldosa;
 PImage calabazaImage, brujaImage, momiaImage, loboImage, calaberaImage;
 PImage animacion;
-
+PVector mouseDistance = new PVector(0,0);
 PVector[] posBaldosas;
 PVector mousePossition = new PVector(mouseX,mouseY);
 String[] lines, posiciones;
@@ -48,7 +48,7 @@ int k, u, cantB,cantM;
 int [][] mundo= new int[8][13];
 int ani = 0, nextScreen=0;
 boolean sw=false;
-boolean colisionando=false,tocado=false;
+boolean colisionando=false, tocado=false;
 boolean sw2=false, mouseOver=false;
 button jugarButton, creditosButton, backButton;
 character pumpkin;
@@ -179,10 +179,10 @@ public class character {
   private int yInicial;
   
   public character(int x, int y, PImage texture, int stamina) {
-    location = new PVector(x,y);
+    location = new PVector(x, y);
     xInicial = x;
     yInicial = y;
-    rotation = 0; 
+    rotation = 0;
     alive = true;
     imageTexture = texture.get();
     dimension = new PVector(texture.width, texture.height);
@@ -524,7 +524,7 @@ public void controlCalabaza(){
     if(!pumpkin.isOut(mundo)) {
       if(mousePressed){
         if(pumpkin.alive) {
-          if(!sw){
+          if(!sw) {
             if(mousePossition.dist(pumpkin.getLocation())<=pumpkin.getDimension().y/2){
               sw=true;
               mouseDistance.x=pumpkin.getLocation().x - mouseX;
@@ -536,20 +536,19 @@ public void controlCalabaza(){
           }
           drawBody(pumpkin);
         }
-      }else{
+      }else {
         if(!pumpkin.alive)
           pumpkin.alive=true; 
-          sw=false;
-          sw2=false;
-          pumpkin.setImage(loadImage("character/calabaza.png"));
-          drawBody(pumpkin);
+        sw=false;
+        sw2=false;
+        pumpkin.setImage(loadImage("character/calabaza.png"));
+        drawBody(pumpkin);
       }
-    }else{
-      if(!pumpkin.isFinish(mundo)){
+    }else {
+      if(!pumpkin.isFinish(mundo)) {
         pumpkin.alive=false;
         pumpkin.setImage(loadImage("character/calabaza1.png"));
         groove2.trigger();
-        //pumpkin.setLocation(pumpkin.getxInicial(),pumpkin.getyInicial());
       }else{
         sw=false;
         pumpkin.alive = true;
@@ -560,7 +559,7 @@ public void controlCalabaza(){
           pantalla=3;
       }
     }
-  }else{
+  }else {
     sw2=false;
     animacion();
   }
@@ -715,7 +714,7 @@ public void drawBody(monster b) {
       b.setTiempoAct(b.getTiempoAct()+2);
       
       //--Colision--//
-      if (dist(b.getX()+10,b.getY(), pumpkin.locationX(),pumpkin.locationY())<60){
+      if (dist(b.getX()+10,b.getY(), pumpkin.locationX(),pumpkin.locationY())<60 && pumpkin.alive){
         pumpkin.alive=false;
         if(!colisionando) {
           groove2.trigger();

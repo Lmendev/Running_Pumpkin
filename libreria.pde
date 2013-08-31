@@ -146,7 +146,7 @@ public void controlCalabaza(){
     if(!pumpkin.isOut(mundo)) {
       if(mousePressed){
         if(pumpkin.alive) {
-          if(!sw){
+          if(!sw) {
             if(mousePossition.dist(pumpkin.getLocation())<=pumpkin.getDimension().y/2){
               sw=true;
               mouseDistance.x=pumpkin.getLocation().x - mouseX;
@@ -158,20 +158,19 @@ public void controlCalabaza(){
           }
           drawBody(pumpkin);
         }
-      }else{
+      }else {
         if(!pumpkin.alive)
           pumpkin.alive=true; 
-          sw=false;
-          sw2=false;
-          pumpkin.setImage(loadImage("character/calabaza.png"));
-          drawBody(pumpkin);
+        sw=false;
+        sw2=false;
+        pumpkin.setImage(loadImage("character/calabaza.png"));
+        drawBody(pumpkin);
       }
-    }else{
-      if(!pumpkin.isFinish(mundo)){
+    }else {
+      if(!pumpkin.isFinish(mundo)) {
         pumpkin.alive=false;
         pumpkin.setImage(loadImage("character/calabaza1.png"));
         groove2.trigger();
-        //pumpkin.setLocation(pumpkin.getxInicial(),pumpkin.getyInicial());
       }else{
         sw=false;
         pumpkin.alive = true;
@@ -182,7 +181,7 @@ public void controlCalabaza(){
           pantalla=3;
       }
     }
-  }else{
+  }else {
     sw2=false;
     animacion();
   }
@@ -337,7 +336,7 @@ public void drawBody(monster b) {
       b.setTiempoAct(b.getTiempoAct()+2);
       
       //--Colision--//
-      if (dist(b.getX()+10,b.getY(), pumpkin.locationX(),pumpkin.locationY())<60){
+      if (dist(b.getX()+10,b.getY(), pumpkin.locationX(),pumpkin.locationY())<60 && pumpkin.alive){
         pumpkin.alive=false;
         if(!colisionando) {
           groove2.trigger();
