@@ -1,5 +1,8 @@
 # Running Pumpkin
 
+![Running Pumpkin screenshot](https://dl.dropboxusercontent.com/u/99015442/screenshots/running_pumpkin_1.jpg "Screenshot")
+
+![Running Pumpkin screenshot](https://dl.dropboxusercontent.com/u/99015442/screenshots/running_pumpkin_2.jpg "Screenshot")
 ## Descripción
 Running pumpkin es un juego de código abierto desarrollado en processing a mediados del año 2012.
 
