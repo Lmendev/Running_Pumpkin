@@ -45,12 +45,11 @@ public void loadMonsters(){
 
 public void loadSounds(){
   //--Cargar musica--//
-  minim = new Minim(this);
   
-  groove = minim.loadFile("sounds/musicaInicio.mp3");  // Cargar musica de fondo
+  groove = new SoundFile(this, "sounds/musicaInicio.mp3");  // Cargar musica de fondo
   if(groove==null)  println("No se pudo cargar el archivo 'sounds/musicaInicio.mp3'.");
   
-  groove2 = minim.loadSample("sounds/scream3.mp3");  // Cargar sonido scream;  
+  groove2 = new SoundFile(this, "sounds/scream3.mp3");  // Cargar sonido scream;  
   if(groove2==null)  println("No se pudo cargar el archivo 'sounds/scream3.mp3'.");
 }
 
@@ -170,7 +169,7 @@ public void controlCalabaza(){
       if(!pumpkin.isFinish(mundo)) {
         pumpkin.alive=false;
         pumpkin.setImage(loadImage("character/calabaza1.png"));
-        groove2.trigger();
+        groove2.play();
       }else{
         sw=false;
         pumpkin.alive = true;
@@ -339,7 +338,7 @@ public void drawBody(monster b) {
       if (dist(b.getX()+10,b.getY(), pumpkin.locationX(),pumpkin.locationY())<60 && pumpkin.alive){
         pumpkin.alive=false;
         if(!colisionando) {
-          groove2.trigger();
+          groove2.play();
         }
         pumpkin.setImage(loadImage("character/calabaza1.png"));
         colisionando =true;
@@ -352,9 +351,8 @@ public void drawBody(monster b) {
 }
 
 void stop() {
-  groove.close();
-  groove2.close();
-  minim.stop();
+  groove.stop();
+  groove2.stop();
  
   super.stop();
 }

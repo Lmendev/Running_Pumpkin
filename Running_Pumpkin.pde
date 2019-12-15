@@ -6,12 +6,11 @@ Angelica Acosta                 @A_N_S_H_Y
 */
 
 //--Librerias--//
-import ddf.minim.*;  //Libreria de audio
+import processing.sound.*;  //Libreria de audio
 
 //--Declaración de variables--//
-AudioPlayer groove;
-AudioSample groove2; 
-Minim minim;
+SoundFile  groove;
+SoundFile groove2; 
 
 PImage fondoInicio; 
 PImage spritecursor;
@@ -85,4 +84,3 @@ public void draw(){
   
   controlAnimacionMouse(); //Controlador de animaciones del mouse
 }
-
