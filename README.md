@@ -17,11 +17,11 @@ sin ser tocada por los obstaculos :)
 ## Equipo de trabajo
 Actualmente en desarrollo por:
 
-* Luis Mendoza      [@lmendoza92](https://twitter.com/lmendoza92)
+* Luis Mendoza      [@lmendev](https://twitter.com/lmendoza92)
 
 ## Equipo de trabajo
 Un proyecto desarrollado inicialmente por:
 
-* Luis Mendoza      [@lmendoza92](https://twitter.com/lmendoza92)
+* Luis Mendoza      [@lmendev](https://twitter.com/lmendoza92)
 * Adriana Gallon    [@apgallon](https://twitter.com/apgallon)
 * Angelica Acosta   
