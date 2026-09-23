@@ -1,27 +1,22 @@
 # Running Pumpkin
 
-Running pumpkin es un juego de código abierto desarrollado en processing a mediados del año 2012.
+Running Pumpkin is an open-source game developed in Processing in mid-2012.
 
 ![alt Running Pumpkin home screenshot](.assets/home.png "Screenshot")
 
 ![alt Running Pumpkin level screenshot](.assets/level.png "Screenshot")
 
-## Historia (En edición)
+## Story
 
-La bruja Clare ha decidido hacer un pay de calabazas para el cumpleaños de su hermana rita. Por lo cual, se ha aventurado en el bosque a conseguir los ingredientes necesarios. En el camino, se encuentra con varios obstaculos. Ha embrujado la mano de un zombie para que le traiga el ingrediente principal y asi ir adelantando lo demás mientras llega la calabaza. 
+The witch Clare has decided to make a pumpkin pie for her sister Rita's birthday. So, she has ventured into the forest to gather the necessary ingredients. Along the way, she runs into several obstacles. She has enchanted a zombie's hand to bring her the main ingredient, so she can get everything else ready while the pumpkin arrives.
 
-## Instrucciones
-Llevar la calabaza desde el extremo derecho hasta el izquierdo donde se encuentra localizada Clare
-sin ser tocada por los obstaculos :)
+## Instructions
+Carry the pumpkin from the right edge to the left edge, where Clare is located,
+without being touched by the obstacles :)
 
-## Equipo de trabajo
-Actualmente en desarrollo por:
+## Team
+A project originally developed by:
 
-* Luis Mendoza      [@lmendev](https://twitter.com/lmendoza92)
-
-## Equipo de trabajo
-Un proyecto desarrollado inicialmente por:
-
-* Luis Mendoza      [@lmendev](https://twitter.com/lmendoza92)
-* Adriana Gallon    [@apgallon](https://twitter.com/apgallon)
+* Luis Mendoza      [@lmendev](https://x.com/lmendev)
+* Adriana Gallon    [@apgallon](https://x.com/apgallon)
 * Angelica Acosta   
