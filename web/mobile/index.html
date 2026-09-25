@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Running Pumpkin — prototipo móvil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@500;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e7e0f0; --ink:#2a2140; --ink-soft:#5a4f73;
+  --board:#2b2340; --floor:#3a3154; --path:#6f7d45; --path-edge:#56622f;
+  --pumpkin:#f28a1e; --pumpkin-dark:#c4620b; --stem:#4f6b2a;
+  --bone:#efe6cf; --witch:#8e5bd6; --danger:#e0475b; --lamp:#ffd166;
+  --btn:#f28a1e; --btn-ink:#2a1606; --scrim:rgba(24,18,38,.72);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#17121f; --ink:#efe6cf; --ink-soft:#b3a8c7; }
+}
+:root[data-theme="dark"]{ --bg:#17121f; --ink:#efe6cf; --ink-soft:#b3a8c7; }
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Grandstander",ui-rounded,"Trebuchet MS",system-ui,sans-serif;
+  overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:0 auto}
+.hud{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;gap:10px}
+.lives{display:flex;gap:6px;font-size:22px;min-width:90px}
+.lives span{width:22px;height:22px;border-radius:50%;background:var(--pumpkin);display:inline-block;box-shadow:inset -4px 0 0 var(--pumpkin-dark)}
+.lives span.lost{background:transparent;box-shadow:inset 0 0 0 2px var(--ink-soft)}
+.hud h1{font-size:18px;font-weight:800;margin:0;letter-spacing:.01em}
+.icon-btn{width:44px;height:44px;border-radius:14px;border:2px solid var(--ink-soft);background:transparent;color:var(--ink);font:inherit;font-size:20px;display:grid;place-items:center;cursor:pointer}
+.icon-btn:focus-visible,.cta:focus-visible{outline:3px solid var(--witch);outline-offset:2px}
+.stage{flex:1;position:relative;min-height:0;display:flex;align-items:center;justify-content:center}
+canvas{display:block;touch-action:none;border-radius:18px}
+.hint{text-align:center;font-size:14px;color:var(--ink-soft);padding:8px 14px 12px;min-height:36px}
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;pointer-events:none}
+.card{pointer-events:auto;background:var(--scrim);color:#efe6cf;border-radius:22px;padding:22px 22px 20px;max-width:320px;text-align:center}
+.card h2{font-size:30px;font-weight:800;margin:0 0 8px;line-height:1.05;color:var(--pumpkin)}
+.card p{margin:0 0 16px;font-size:16px;line-height:1.45}
+.cta{border:0;border-radius:16px;background:var(--btn);color:var(--btn-ink);font:inherit;font-weight:800;font-size:18px;padding:12px 26px;min-height:48px;cursor:pointer}
+.overlay.soft .card{pointer-events:none;background:var(--scrim)}
+.overlay.soft .card h2{font-size:22px}
+.overlay.soft .card p{margin:0}
+.hidden{display:none}
+@media (prefers-reduced-motion: reduce){ .card{transition:none} }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="hud">
+    <div class="lives" id="lives" aria-label="Vidas"></div>
+    <h1>Nivel 1</h1>
+    <button class="icon-btn" id="restart" aria-label="Reiniciar nivel">↺</button>
+  </header>
+  <main class="stage" id="stage">
+    <canvas id="game" aria-label="Tablero del juego"></canvas>
+    <div class="overlay" id="overlay">
+      <div class="card">
+        <h2 id="ovTitle">Running Pumpkin</h2>
+        <p id="ovText">Lleva la calabaza hasta Clare, arriba. Arrastra el dedo en cualquier parte: la calabaza copia tu movimiento sin quedar tapada.</p>
+        <button class="cta" id="ovBtn">Jugar</button>
+      </div>
+    </div>
+  </main>
+  <p class="hint" id="hint">Suelta el dedo cuando quieras: el juego se pausa.</p>
+</div>
+<script>
+(function(){
+const COLS=8, ROWS=13, SENS=1.25;
+const PATH_PTS=[[3,12],[3,10],[6,10],[6,7],[1,7],[1,4],[5,4],[5,2],[3,2],[3,0]];
+const CHECKS=[[3,12],[6,10],[1,7],[5,4]];
+const GOAL=[3,0];
+const MONSTER_DEFS=[
+  {kind:'skull', axis:'y', fixed:4.5, from:8.7, to:11.3, speed:1.5, phase:0},
+  {kind:'mummy', axis:'x', fixed:8.5, from:4.7, to:7.3, speed:1.7, phase:.5},
+  {kind:'skull', axis:'y', fixed:3.5, from:5.7, to:8.3, speed:1.9, phase:.2},
+  {kind:'wolf',  axis:'x', fixed:5.5, from:-0.2, to:2.4, speed:1.6, phase:.7},
+  {kind:'mummy', axis:'y', fixed:3.5, from:2.7, to:5.3, speed:2.1, phase:.3},
+  {kind:'wolf',  axis:'y', fixed:4.5, from:0.8, to:3.3, speed:2.3, phase:.6}
+];
+const P_DRAW=.34, P_HIT=.21, M_DRAW=.34, M_HIT=.23, WALL=.24;
+
+const grid=[...Array(ROWS)].map(()=>Array(COLS).fill(false));
+for(let i=0;i<PATH_PTS.length-1;i++){
+  const [c1,r1]=PATH_PTS[i],[c2,r2]=PATH_PTS[i+1];
+  for(let c=Math.min(c1,c2);c<=Math.max(c1,c2);c++)for(let r=Math.min(r1,r2);r<=Math.max(r1,r2);r++)grid[r][c]=true;
+}
+const cv=document.getElementById('game'), ctx=cv.getContext('2d');
+const stage=document.getElementById('stage');
+const ov=document.getElementById('overlay'), ovTitle=document.getElementById('ovTitle'), ovText=document.getElementById('ovText'), ovBtn=document.getElementById('ovBtn');
+const livesEl=document.getElementById('lives'), hint=document.getElementById('hint');
+let T=40, W=0, H=0, dpr=1;
+let state='intro', lives=3, checkpoint=0, invuln=0, t=0, nearCool=0;
+let px=0, py=0, monsters=[], pointerId=null, lastX=0, lastY=0;
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let C={};
+function readColors(){['--board','--floor','--path','--path-edge','--pumpkin','--pumpkin-dark','--stem','--bone','--witch','--danger','--lamp'].forEach(k=>C[k]=css(k));}
+
+function resize(){
+  const r=stage.getBoundingClientRect();
+  T=Math.floor(Math.min((r.width-16)/COLS,(r.height-8)/ROWS));
+  W=T*COLS;H=T*ROWS;dpr=Math.min(window.devicePixelRatio||1,3);
+  cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+function isPath(x,y){const c=Math.floor(x),r=Math.floor(y);return r>=0&&r<ROWS&&c>=0&&c<COLS&&grid[r][c];}
+function free(x,y){return isPath(x-WALL,y-WALL)&&isPath(x+WALL,y-WALL)&&isPath(x-WALL,y+WALL)&&isPath(x+WALL,y+WALL);}
+function vib(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
+
+function reset(full){
+  if(full){lives=3;checkpoint=0;}
+  const [c,r]=CHECKS[checkpoint];px=c+.5;py=r+.5;
+  monsters=MONSTER_DEFS.map(d=>({...d,s:d.phase*2,x:0,y:0}));
+  monsters.forEach(placeMonster);
+  renderLives();
+}
+function placeMonster(m){
+  const span=m.to-m.from, k=(m.s%2), f=k<1?k:2-k, v=m.from+span*f;
+  if(m.axis==='x'){m.x=v;m.y=m.fixed;}else{m.x=m.fixed;m.y=v;}
+}
+function renderLives(){livesEl.innerHTML='';for(let i=0;i<3;i++){const s=document.createElement('span');if(i>=lives)s.className='lost';livesEl.appendChild(s);}}
+
+function showCard(title,text,btn){ov.className='overlay';ovTitle.textContent=title;ovText.textContent=text;ovBtn.textContent=btn;ovBtn.classList.remove('hidden');}
+function showSoft(title,text){ov.className='overlay soft';ovTitle.textContent=title;ovText.textContent=text;ovBtn.classList.add('hidden');}
+function hideOverlay(){ov.className='overlay hidden';}
+
+function movePumpkin(dx,dy){
+  const steps=Math.max(1,Math.ceil(Math.max(Math.abs(dx),Math.abs(dy))/0.15));
+  for(let i=0;i<steps;i++){
+    const sx=dx/steps, sy=dy/steps;
+    if(free(px+sx,py))px+=sx;
+    if(free(px,py+sy))py+=sy;
+  }
+}
+
+cv.addEventListener('pointerdown',e=>{
+  if(state==='intro'||state==='won'||state==='over')return;
+  e.preventDefault();pointerId=e.pointerId;cv.setPointerCapture(e.pointerId);
+  lastX=e.clientX;lastY=e.clientY;
+  if(state==='paused'){state='playing';hideOverlay();hint.textContent='Suelta el dedo cuando quieras: el juego se pausa.';}
+});
+cv.addEventListener('pointermove',e=>{
+  if(e.pointerId!==pointerId||state!=='playing')return;
+  e.preventDefault();
+  const dx=(e.clientX-lastX)*SENS/T, dy=(e.clientY-lastY)*SENS/T;
+  lastX=e.clientX;lastY=e.clientY;movePumpkin(dx,dy);
+});
+function lift(e){
+  if(e.pointerId!==pointerId)return;pointerId=null;
+  if(state==='playing'){state='paused';showSoft('Pausa','Toca la pantalla para seguir.');}
+}
+cv.addEventListener('pointerup',lift);cv.addEventListener('pointercancel',lift);
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='playing'){state='paused';pointerId=null;showSoft('Pausa','Toca la pantalla para seguir.');}});
+document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+
+ovBtn.addEventListener('click',()=>{
+  if(state==='intro'||state==='won'||state==='over'){reset(true);state='paused';showSoft('¡Listo!','Pon el dedo en la pantalla y muévelo.');}
+});
+document.getElementById('restart').addEventListener('click',()=>{reset(true);state='paused';showSoft('Nivel reiniciado','Toca la pantalla para empezar.');});
+
+function update(dt){
+  t+=dt;
+  if(state!=='playing')return;
+  if(invuln>0)invuln-=dt;
+  if(nearCool>0)nearCool-=dt;
+  monsters.forEach(m=>{m.s+=dt*m.speed/Math.max(.5,(m.to-m.from))*1;placeMonster(m);});
+  CHECKS.forEach((c,i)=>{if(i>checkpoint&&Math.floor(px)===c[0]&&Math.floor(py)===c[1]){checkpoint=i;vib(30);}});
+  if(Math.floor(py)===GOAL[1]&&Math.floor(px)===GOAL[0]){state='won';vib([40,60,40]);showCard('¡Clare tiene su calabaza!','El pastel para Rita va a quedar perfecto.','Jugar otra vez');return;}
+  if(invuln>0)return;
+  for(const m of monsters){
+    const d=Math.hypot(m.x-px,m.y-py);
+    if(d<P_HIT+M_HIT){hit();return;}
+    if(d<P_HIT+M_HIT+.28&&nearCool<=0){vib(12);nearCool=.45;}
+  }
+}
+function hit(){
+  lives--;vib([80,40,80]);renderLives();pointerId=null;
+  if(lives<=0){state='over';showCard('Te atraparon','La calabaza vuelve al inicio del bosque.','Intentar de nuevo');return;}
+  const [c,r]=CHECKS[checkpoint];px=c+.5;py=r+.5;invuln=1.2;
+  state='paused';showSoft('¡Auch!','Vuelves a la última linterna. Toca para seguir.');
+}
+
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):ctx.rect(x,y,w,h);}
+function drawBoard(){
+  ctx.fillStyle=C['--board'];ctx.fillRect(0,0,W,H);
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    const x=c*T,y=r*T;
+    if(grid[r][c]){ctx.fillStyle=C['--path-edge'];rr(x+1,y+1,T-2,T-2,T*.22);ctx.fill();ctx.fillStyle=C['--path'];rr(x+3,y+3,T-6,T-7,T*.2);ctx.fill();}
+    else if((r*7+c*3)%5===0){ctx.fillStyle=C['--floor'];ctx.beginPath();ctx.moveTo(x+T*.5,y+T*.15);ctx.lineTo(x+T*.8,y+T*.8);ctx.lineTo(x+T*.2,y+T*.8);ctx.fill();}
+  }
+  CHECKS.forEach((c,i)=>{if(i===0)return;const x=(c[0]+.5)*T,y=(c[1]+.5)*T,on=i<=checkpoint;
+    ctx.fillStyle=on?C['--lamp']:C['--floor'];ctx.beginPath();ctx.arc(x+T*.3,y-T*.28,T*.11,0,Math.PI*2);ctx.fill();
+    if(on){ctx.globalAlpha=.18;ctx.beginPath();ctx.arc(x+T*.3,y-T*.28,T*.3,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+  });
+  const gx=(GOAL[0]+.5)*T, gy=(GOAL[1]+.5)*T;
+  ctx.fillStyle=C['--bone'];ctx.beginPath();ctx.arc(gx,gy+T*.08,T*.2,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=C['--witch'];ctx.beginPath();ctx.moveTo(gx-T*.38,gy-T*.02);ctx.lineTo(gx+T*.38,gy-T*.02);ctx.lineTo(gx+T*.05,gy-T*.5);ctx.fill();
+}
+function drawMonster(m){
+  const x=m.x*T,y=m.y*T,R=M_DRAW*T;
+  if(m.kind==='skull'){
+    ctx.fillStyle=C['--bone'];ctx.beginPath();ctx.arc(x,y-R*.1,R,0,Math.PI*2);ctx.fill();ctx.fillRect(x-R*.5,y+R*.5,R,R*.4);
+    ctx.fillStyle=C['--board'];ctx.beginPath();ctx.arc(x-R*.38,y-R*.1,R*.26,0,7);ctx.arc(x+R*.38,y-R*.1,R*.26,0,7);ctx.fill();
+  }else if(m.kind==='mummy'){
+    ctx.fillStyle=C['--bone'];rr(x-R*.8,y-R,R*1.6,R*2,R*.5);ctx.fill();
+    ctx.strokeStyle=C['--floor'];ctx.lineWidth=Math.max(1,T*.03);
+    for(let i=-2;i<=2;i++){ctx.beginPath();ctx.moveTo(x-R*.8,y+i*R*.38);ctx.lineTo(x+R*.8,y+i*R*.38+R*.12);ctx.stroke();}
+    ctx.fillStyle=C['--danger'];ctx.beginPath();ctx.arc(x-R*.3,y-R*.25,R*.12,0,7);ctx.arc(x+R*.3,y-R*.25,R*.12,0,7);ctx.fill();
+  }else{
+    ctx.fillStyle='#8a8196';ctx.beginPath();ctx.arc(x,y,R*.85,0,7);ctx.fill();
+    ctx.beginPath();ctx.moveTo(x-R*.8,y-R*.3);ctx.lineTo(x-R*.55,y-R*1.1);ctx.lineTo(x-R*.2,y-R*.6);ctx.fill();
+    ctx.beginPath();ctx.moveTo(x+R*.8,y-R*.3);ctx.lineTo(x+R*.55,y-R*1.1);ctx.lineTo(x+R*.2,y-R*.6);ctx.fill();
+    ctx.fillStyle=C['--lamp'];ctx.beginPath();ctx.arc(x-R*.3,y-R*.1,R*.13,0,7);ctx.arc(x+R*.3,y-R*.1,R*.13,0,7);ctx.fill();
+  }
+}
+function drawPumpkin(){
+  if(invuln>0&&Math.floor(t*10)%2===0)return;
+  const x=px*T,y=py*T,R=P_DRAW*T;
+  ctx.fillStyle=C['--pumpkin-dark'];ctx.beginPath();ctx.ellipse(x,y,R*1.05,R*.9,0,0,7);ctx.fill();
+  ctx.fillStyle=C['--pumpkin'];ctx.beginPath();ctx.ellipse(x-R*.35,y,R*.55,R*.88,0,0,7);ctx.ellipse(x+R*.35,y,R*.55,R*.88,0,0,7);ctx.fill();
+  ctx.beginPath();ctx.ellipse(x,y,R*.45,R*.9,0,0,7);ctx.fill();
+  ctx.fillStyle=C['--stem'];ctx.fillRect(x-R*.1,y-R*1.15,R*.2,R*.35);
+}
+function loop(now){
+  const dt=Math.min(.05,(now-(loop.last||now))/1000);loop.last=now;
+  update(dt);
+  drawBoard();monsters.forEach(drawMonster);drawPumpkin();
+  requestAnimationFrame(loop);
+}
+readColors();resize();reset(true);
+window.addEventListener('resize',resize);
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',readColors);
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
